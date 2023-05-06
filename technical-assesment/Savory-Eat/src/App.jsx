@@ -1,10 +1,22 @@
 //the default user to update and delete is {user_Id:1,username:'testuser',email:'test@test.com',password:'password}
-import React ,{useState}from "react";
 import "./App.css";
+import { useEffect, useState } from "react";
+import AllRecipies from "./components/AllRecipies.jsx";
+import OneRecipie from "./components/OneRecipie.jsx";
 import Home from "./components/Home.jsx";
-import AllRecepies from "./components/AllRecipies.jsx"
+import Add from "./components/Add.jsx";
+import dummyData from "./data/data.json";
+import axios from "axios";
 function App() {
-const [view,setView]=useState('Home')
+  const [view, setView] = useState("Home");
+  const [data, setData] = useState(dummyData);
+  const [one, setOne] = useState(data[0]);
+  const [search, setSearch] = useState("");
+  useEffect(() => {
+    axios.get("http://localhost:4000/recipe").then((res) => {
+      setData(res.data);
+    });
+  }, []);
   let changeView = (view) => {
     setView(view);
   };
@@ -22,26 +34,40 @@ const [view,setView]=useState('Home')
         <div
           className="nav-item"
           active-color="green"
-          onClick={() => setView("Allrecepies")}
+          
+          onClick={() => setView("AllRecipies")}
         >
           All Recipies
         </div>
         <div
           className="nav-item"
           active-color="red"
-          onClick={() => setView("Addrecepie")}
+          onClick={() => setView("AddRecipe")}
         >
-          Addrecepie
+          AddRecipe
         </div>
         <div className="nav-item" active-color="red">
-          <input type="text"  />
-          <button>search</button>
+          <input type="text" onChange={(e) => setSearch(e.target.value)} />
+          <button
+            onClick={() => {
+              setData(
+                data.filter((e) =>
+                  e.Recipe_Name.toLowerCase().includes(search.toLowerCase())
+                )
+              );
+            }}
+          >
+            search
+          </button>
         </div>
         <span className="nav-indicator"></span>
       </nav>
-      {view === "Home" && <Home changeView={changeView}/>}
-      {view === "Allrecepies" && <AllRecepies />}
-     
+      {view === "Home" && <Home changeView={changeView} />}
+      {view === "AllRecipies" && (
+        <AllRecipies changeView={changeView} setOne={setOne} data={data} />
+      )}
+      {view === "AddRecipe" && <Add one={one} />}
+      {view === "OneRecepie" && <OneRecepie one={one} />}
       <div></div>
     </div>
   );

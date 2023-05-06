@@ -2,7 +2,7 @@ import React from "react";
 import "../App.css"
 import "../index.scss";
 
-const Onerecepie = ({ one }) => {
+const OneRecipie = ({ one }) => {
   return (
     <div>
       <div className="receipe-content-area">
@@ -25,4 +25,4 @@ const Onerecepie = ({ one }) => {
   );
 };
 
-export default Onerecepie;
+export default OneRecipie;
